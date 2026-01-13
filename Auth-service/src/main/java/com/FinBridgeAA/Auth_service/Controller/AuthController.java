@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
@@ -18,8 +20,18 @@ public class AuthController {
         return ResponseEntity.ok("OTP sent");
     }
     @PostMapping("/verify-otp")
-    public ResponseEntity<String> verifyOTP(@RequestBody VerifyOtpRequest request) {
-        authService.VerifyOtp(request.getPhoneNumber(), request.getOtp());
-        return ResponseEntity.ok("OTP Verified");
+    public ResponseEntity<?> verifyOtp(@RequestBody VerifyOtpRequest request) {
+
+        String token = authService.VerifyOtp(
+                request.getPhoneNumber(),
+                request.getOtp()
+        );
+
+        return ResponseEntity.ok(
+                Map.of(
+                        "access_token", token,
+                        "expires_in", 86400
+                )
+        );
     }
 }

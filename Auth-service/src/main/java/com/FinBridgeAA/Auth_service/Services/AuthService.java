@@ -15,13 +15,15 @@ public class AuthService {
 
     private final AuthUserRepository authUserRepository;
     private final OtpService otpService;
-    public AuthService(AuthUserRepository authUserRepository) {
+    private final JwtService jwtService;
+    public AuthService(AuthUserRepository authUserRepository, OtpService otpService, JwtService jwtService) {
         this.authUserRepository = authUserRepository;
-        this.otpService = new OtpService();
+        this.otpService = otpService;
+        this.jwtService = jwtService;
     }
     public void requestOtp(String phoneNumber) {
         String otp = otpService.generateOtp();
-
+        System.out.println(otp);
         AuthUser user = authUserRepository
                 .findByPhoneNumber(phoneNumber)
                 .orElseGet(() -> createNewUser(phoneNumber));
@@ -38,7 +40,7 @@ public class AuthService {
         user.setCreatedAt(LocalDateTime.now());
         return user;
     }
-    public void VerifyOtp(String phoneNumber, String otp) {
+    public String VerifyOtp(String phoneNumber, String otp) {
         AuthUser user = authUserRepository.findByPhoneNumber(phoneNumber)
                 .orElseThrow(() -> new RuntimeException("Invalid request..."));
 
@@ -57,10 +59,12 @@ public class AuthService {
             throw new RuntimeException("invalid OTP...");
         }
 
+
         user.setOtpHash(null);
         user.setOtpExpiry(null);
         user.setOtpAttempts(0);
-
+        String token = jwtService.generateJWTToken(user);
         authUserRepository.save(user);
+        return token;
     }
 }

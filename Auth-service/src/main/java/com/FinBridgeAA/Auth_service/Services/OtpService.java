@@ -12,7 +12,7 @@ public class OtpService {
     private SecureRandom random = new SecureRandom();
 
     public String generateOtp() {
-        int otp = random.nextInt(90000) + 10000;
+        int otp = random.nextInt(900000) + 100000;
         return String.valueOf(otp);
     }
     /* encoding otp */

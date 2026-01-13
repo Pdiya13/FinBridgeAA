@@ -1,6 +1,7 @@
 package com.FinBridgeAA.Auth_service.Services;
 
 import com.FinBridgeAA.Auth_service.Entity.AuthUser;
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
@@ -43,16 +44,15 @@ public class JwtService {
                 .compact();
     }
 
-    // ===================== EXTRACTION =====================
-//    public String extractUserId(String token) {
-//        return extractAllClaims(token).getSubject();
-//    }
-//
-//    public String extractRole(String token) {
-//        return extractAllClaims(token).get("role", String.class);
-//    }
 
-//    // ===================== VALIDATION =====================
+    public String extractUserId(String token) {
+        return extractAllClaims(token).getSubject();
+    }
+//
+    public String extractRole(String token) {
+        return extractAllClaims(token).get("role", String.class);
+    }
+
 //    public boolean validateToken(String token) {
 //        try {
 //            extractAllClaims(token);
@@ -62,17 +62,20 @@ public class JwtService {
 //        }
 //    }
 //
-//    private boolean isTokenExpired(String token) {
-//        return extractAllClaims(token)
-//                .getExpiration()
-//                .before(new Date());
-//    }
-//
-//    private Claims extractAllClaims(String token) {
-//        return Jwts.parser()
-//                .verifyWith(secretKey)
-//                .build()
-//                .parseClaimsJws(token)
-//                .getBody();
-//    }
+    public Date extractExpiration(String token) {
+        return extractAllClaims(token).getExpiration();
+    }
+    private boolean isTokenExpired(String token) {
+        return extractAllClaims(token)
+                .getExpiration()
+                .before(new Date());
+    }
+
+    private Claims extractAllClaims(String token) {
+        return Jwts.parser()
+                .verifyWith(secretKey)
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+    }
 }

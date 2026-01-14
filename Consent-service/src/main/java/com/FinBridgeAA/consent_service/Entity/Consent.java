@@ -11,12 +11,10 @@ import lombok.Setter;
 
 import java.time.Instant;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
 @Table(name = "consents")
-@RequiredArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
@@ -24,7 +22,7 @@ public class Consent {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(nullable = false,updatable = false)
+    @Column(nullable = false, updatable = false)
     private UUID consentId;
 
     @Column(nullable = false)
@@ -43,7 +41,7 @@ public class Consent {
     private ConsentStatus status;
 
     @Column(nullable = false)
-    private LocalDate fromData;
+    private LocalDate fromDate;
 
     @Column(nullable = false)
     private LocalDate toDate;
@@ -54,6 +52,10 @@ public class Consent {
     @Column(nullable = false)
     private Instant expiresAt;
 
+    // 🔥 NEW
+    @Column(unique = true)
+    private String aaConsentId;
+
     @PrePersist
     protected void onCreate() {
         this.createdAt = Instant.now();
@@ -63,8 +65,7 @@ public class Consent {
         }
 
         if (this.expiresAt == null) {
-            this.expiresAt = Instant.now().plusSeconds(30L * 24 * 60 * 60); // 30 days
+            this.expiresAt = Instant.now().plusSeconds(30L * 24 * 60 * 60);
         }
     }
-
 }

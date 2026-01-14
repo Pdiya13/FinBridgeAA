@@ -1,5 +1,6 @@
 HELP.md
 target/
+**/target/
 .mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
@@ -15,6 +16,7 @@ target/
 
 ### IntelliJ IDEA ###
 .idea
+**/.idea/
 *.iws
 *.iml
 *.ipr
@@ -31,3 +33,7 @@ build/
 
 ### VS Code ###
 .vscode/
+
+.idea
+application-local.properties
+application.properties
